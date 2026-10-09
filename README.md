@@ -18,6 +18,20 @@ npm run dev              # automatikus újraindítás fájlváltozáskor
 npm test
 ```
 
+## Telepítés Vercelre
+
+1. A Vercelen: **Add New → Project**, majd a GitHub-repó importálása. A *Framework Preset* legyen
+   „Other”, a build- és kimeneti beállítások maradjanak üresen.
+2. *Settings → Environment Variables*: `CONTACT`, és a használt kulcsok (`WEATHERAPI_KEY`,
+   `OPENWEATHER_KEY`, `VISUALCROSSING_KEY`, `METEOSOURCE_KEY`, `TOMORROW_KEY`). A `PORT` és a `HOST`
+   itt nem kell.
+3. Deploy. Ezután minden `main`-re küldött push automatikusan élesít.
+
+A [vercel.json](vercel.json) minden útvonalat az `api/index.js` függvényre irányít, a frankfurti
+régióban (`fra1`) futtatja, és a `public/` fájlokat is a függvény mellé csomagolja. A gyorsítótár a
+memóriában van, így függvénypéldányonként külön él, és hidegindításkor üres. Ilyenkor az első
+látogató a források válaszára vár (kb. 0,5–1,5 s).
+
 ## Adatforrások
 
 | Forrás | Kulcs (`.env`) | Ingyenes keret / megjegyzés |
@@ -101,7 +115,9 @@ A választott diagram és a nyitott/csukott állapot megmarad.
 ## Szerkezet
 
 ```
-server.js               HTTP-szerver, oldalösszeállítás, NDJSON stream, CSP
+server.js               helyi HTTP-szerver (npm start)
+api/index.js            Vercel Function belépési pont (waitUntil a háttérfrissítésekhez)
+lib/app.js              útvonalak, oldalösszeállítás, NDJSON stream, CSP
 lib/forecast.js         források párhuzamos futtatása, időzóna, gyorsítótár
 lib/aggregate.js        órás → napi összesítés helyi idő szerint
 lib/providers/*.js      forrásonkénti URL-építés és normalizálás

@@ -11,5 +11,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test"
+  },
+  "dependencies": {
+    "@vercel/functions": "^3.9.11"
   }
 }
