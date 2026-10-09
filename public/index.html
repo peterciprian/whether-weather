@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1b5fc1">
+<title>Whether Weather</title>
+<meta name="description" content="Időjárás-előrejelzések összehasonlítása több forrásból, egy pillantással. / Compare weather forecasts from several sources at a glance.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>/*{{STYLES}}*/</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="g-cloud" d="M18 50h28a11 11 0 0 0 1.5-21.9A15 15 0 0 0 18.6 25 12.5 12.5 0 0 0 18 50z"/>
+    <g id="g-sun">
+      <g stroke="#f59e0b" stroke-width="4" stroke-linecap="round"><path d="M32 5v7M32 52v7M5 32h7M52 32h7M12.9 12.9l5 5M46.1 46.1l5 5M12.9 51.1l5-5M46.1 17.9l5-5"/></g>
+      <circle cx="32" cy="32" r="12" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+    </g>
+    <path id="g-moon" d="M40 10a22 22 0 1 0 16 33A18 18 0 0 1 40 10z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2" stroke-linejoin="round"/>
+  </defs>
+  <symbol id="wx-clear" viewBox="0 0 64 64"><use href="#g-sun"/></symbol>
+  <symbol id="wx-clear-night" viewBox="0 0 64 64"><use href="#g-moon"/></symbol>
+  <symbol id="wx-partly-night" viewBox="0 0 64 64">
+    <use href="#g-moon" transform="translate(-2 -4) scale(.72)"/>
+    <use href="#g-cloud" class="cl" transform="translate(6 8) scale(.9)"/>
+  </symbol>
+  <symbol id="wx-partly" viewBox="0 0 64 64">
+    <use href="#g-sun" transform="translate(-2 -4) scale(.72)"/>
+    <use href="#g-cloud" class="cl" transform="translate(6 8) scale(.9)"/>
+  </symbol>
+  <symbol id="wx-cloudy" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl2" transform="translate(-2 -6) scale(.85)"/>
+    <use href="#g-cloud" class="cl" transform="translate(6 6) scale(.9)"/>
+  </symbol>
+  <symbol id="wx-fog" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl" transform="translate(0 -10)"/>
+    <path d="M10 49h44M16 56h34M10 63h30" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="wx-drizzle" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl" transform="translate(0 -10)"/>
+    <path d="M22 47v3M32 47v3M42 47v3M27 55v3M37 55v3" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="wx-rain" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl" transform="translate(0 -10)"/>
+    <path d="M22 46l-4 12M33 46l-4 12M44 46l-4 12" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="wx-sleet" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl" transform="translate(0 -10)"/>
+    <path d="M22 46l-4 12M42 46l-4 12" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="31" cy="53" r="3.5" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2"/>
+  </symbol>
+  <symbol id="wx-snow" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl" transform="translate(0 -10)"/>
+    <g stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"><path d="M20 47v10M15.7 49.5l8.6 5M15.7 54.5l8.6-5M44 47v10M39.7 49.5l8.6 5M39.7 54.5l8.6-5M32 53v8M28.5 55l7 4M28.5 59l7-4"/></g>
+  </symbol>
+  <symbol id="wx-thunder" viewBox="0 0 64 64">
+    <use href="#g-cloud" class="cl3" transform="translate(0 -10)"/>
+    <path d="M34 40l-9 12h7l-4 11 12-15h-7l4-8z" fill="#facc15" stroke="#ca8a04" stroke-width="1.5" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-umbrella" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 18 0zM12 12v6.5a2 2 0 0 1-4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-gust" viewBox="0 0 24 24"><path d="M3 8h9a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h6M3 20h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 19h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 9.6 4.75 4.75 0 0 0 7 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-sky" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 20h8a3.5 3.5 0 0 0 .5-6.96A5 5 0 0 0 8 13.2 3.4 3.4 0 0 0 9 20z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 2l6.5 18L12 16l-6.5 4z" fill="currentColor"/></symbol>
+  <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+</svg>
+
+<header class="top">
+  <a class="brand" href="/" aria-label="Whether Weather"><svg class="logo" aria-hidden="true"><use href="#wx-partly"/></svg><span>Whether Weather</span></a>
+  <form id="search" class="search" role="search" autocomplete="off">
+    <svg class="search-ic" aria-hidden="true"><use href="#i-search"/></svg>
+    <input id="q" type="search" name="q" enterkeyhint="search" spellcheck="false" aria-autocomplete="list" aria-controls="suggest" aria-expanded="false">
+    <ul id="suggest" class="suggest" role="listbox" hidden></ul>
+  </form>
+  <button id="locate" class="btn" type="button"><svg aria-hidden="true"><use href="#i-locate"/></svg><span class="lbl"></span></button>
+  <div class="lang" role="group" aria-label="Language / Nyelv">
+    <button type="button" data-lang="hu">HU</button><button type="button" data-lang="en">EN</button>
+  </div>
+</header>
+
+<main>
+  <div class="placebar">
+    <h1 id="place"><span class="sk sk-wide"></span></h1>
+    <p id="status" class="status" aria-live="polite"></p>
+  </div>
+  <nav id="ranges" class="ranges"></nav>
+  <p id="notice" class="notice" role="alert" hidden></p>
+  <section id="hero" class="hero" aria-live="polite"><div class="hero-ic sk"></div><div class="hero-main"><span class="sk sk-wide"></span><span class="sk"></span></div></section>
+  <div id="days"></div>
+</main>
+
+<footer id="footer" class="foot"></footer>
+<!--{{BOOT}}-->
+<script type="module">/*{{SCRIPT}}*/</script>
+</body>
+</html>
