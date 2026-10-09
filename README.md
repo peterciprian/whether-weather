@@ -28,7 +28,8 @@ npm test
 3. Deploy. Ezután minden `main`-re küldött push automatikusan élesít.
 
 A [vercel.json](vercel.json) minden útvonalat az `api/index.js` függvényre irányít, a frankfurti
-régióban (`fra1`) futtatja, és a `public/` fájlokat is a függvény mellé csomagolja. A gyorsítótár a
+régióban (`fra1`) futtatja, és a `web/` mappát is a függvény mellé csomagolja. (A mappa szándékosan
+nem `public/`: azt a Vercel statikusan kiszolgálná, és a nyers sablon jelenne meg.) A gyorsítótár a
 memóriában van, így függvénypéldányonként külön él, és hidegindításkor üres. Ilyenkor az első
 látogató a források válaszára vár (kb. 0,5–1,5 s).
 
@@ -122,7 +123,7 @@ lib/forecast.js         források párhuzamos futtatása, időzóna, gyorsítót
 lib/aggregate.js        órás → napi összesítés helyi idő szerint
 lib/providers/*.js      forrásonkénti URL-építés és normalizálás
 lib/geo.js              helynévkeresés (Open-Meteo) és fordított geokódolás (Nominatim)
-public/                 index.html, styles.css, app.js, i18n.js, consensus.js (a szerver összefűzi)
+web/                    index.html, styles.css, app.js, i18n.js, consensus.js (a szerver összefűzi)
 test/                   node:test egységtesztek
 ```
 

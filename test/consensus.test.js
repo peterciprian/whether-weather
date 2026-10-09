@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { consensus, median, circularMean, deriveDayIcon } from '../public/consensus.js';
+import { consensus, median, circularMean, deriveDayIcon } from '../web/consensus.js';
 
 test('median ignores missing values', () => {
   assert.equal(median([3, null, 1, 2]), 2);

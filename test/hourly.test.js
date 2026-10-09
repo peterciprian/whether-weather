@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { hourWindow, hourlyFromIntervals, hourlyFromLocal } from '../lib/aggregate.js';
-import { hourConsensus } from '../public/consensus.js';
+import { hourConsensus } from '../web/consensus.js';
 import { trimHours } from '../lib/forecast.js';
 import openMeteo from '../lib/providers/open-meteo.js';
 
