@@ -1,14 +1,12 @@
 // Vercel Function entry point: every path is rewritten here (see vercel.json).
-import { waitUntil } from '@vercel/functions';
-import { handler, setBackground } from '../lib/app.js';
+import { getCache, waitUntil } from '@vercel/functions';
+import { createHash } from 'node:crypto';
+import { handler, setBackground, cache } from '../lib/app.js';
 
-setBackground((p) => {
-  try {
-    waitUntil(p);
-  } catch {
-    // outside a request context – nothing to extend
-  }
-  return p;
+cache.shared = getCache({
+  namespace: 'whether-weather-v1',
+  keyHashFunction: (key) => createHash('sha256').update(key).digest('hex'),
 });
+setBackground(waitUntil);
 
 export default handler;
